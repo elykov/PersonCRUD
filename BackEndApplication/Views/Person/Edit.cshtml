@@ -4,23 +4,30 @@
 }
 
 <style>
-    input[type=checkbox] 
-    {
+    input[type=checkbox] {
         font-size: 20px;
         border-color: firebrick;
         background-color: firebrick;
     }
 
-    input[type=checkbox]:hover {
-        cursor: pointer;
-    }
-
-
-
+        input[type=checkbox]:hover {
+            cursor: pointer;
+        }
 </style>
 
-<h2>Edit Person</h2>
+<div class="text-center">
+    @if (ViewBag.Id.ToString().Equals("create"))
+    {
+        <h2>Edit Person</h2>
+    }
+    else
+    {
+        <h2>Edit Person</h2>
+    }
+</div>
+
 <hr />
+
 <div class="container">
     <div class="row">
         <div class="col-md-6">
@@ -35,8 +42,8 @@
 
         <div class="col-md-6">
             <label for="is-active" class="field-name">Active</label>
-            <input type="checkbox" id="is-active" class="checkbox" 
-                data-bind="attr:{'checked':(isActive == 'false') ? 'checked' : false}"/>
+            <input type="checkbox" id="is-active" class="checkbox"
+                   data-bind="attr:{'checked':($data.active == 'false') ? 'checked' : false}" />
         </div>
 
         <div class="col-md-6">
@@ -52,22 +59,22 @@
 
         <div class="col-md-6">
             <label for="birthdate" class="field-name">Birthdate</label>
-            <input data-bind="value: birthDate" id="birthdate" type="text"> @*type="date"*@
+            <input data-bind="value: $data.birthDate" id="birthdate" type="text"> @*type="date"*@
         </div>
 
-        <!-- ko if: name -->
+        <!-- ko if: $data.name -->
         <div class="col-md-6">
             <label class="field-name">Name</label>
 
         </div>
         <!-- /ko -->
-        <!-- ko if: address -->
+        <!-- ko if: $data.address -->
         <div class="col-md-6">
             <label class="field-name">Address</label>
 
         </div>
         <!-- /ko -->
-        <!-- ko if: telecom -->
+        <!-- ko if: $data.telecom -->
         <div class="col-md-6">
             <label class="field-name">Telecom</label>
 
@@ -75,7 +82,7 @@
 
         </div>
         <!-- /ko -->
-        <!-- ko if: link -->
+        <!-- ko if: $data.link -->
         <div class="col-md-6">
             <label class="field-name">Link</label>
             @*readonly*@
@@ -93,6 +100,9 @@
 
 @section Scripts {
     <script type="text/javascript">
+        // PUT - UPDATE(ID)
+        // POST - INSERT(ID?)
+
         const siteUrl = "https://hapi.fhir.org/baseR4/Person";
         var self = this;
 
@@ -108,14 +118,14 @@
                 type: 'GET',
                 //contentType: "application/json",
                 success: function (data) {
-                    alert("data");
+                    //alert("data");
                     console.log(data);
                     self = data;
                     ko.applyBindings(self);
                         //ko.observableArray();
                 },
                 error: function (data) {
-                    alert("error");
+                    alert("Error while data reading.");
                     console.log(data);
                 }
             })

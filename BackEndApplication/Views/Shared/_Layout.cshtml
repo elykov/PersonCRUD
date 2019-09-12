@@ -10,8 +10,8 @@
             <link rel="stylesheet" href="~/css/site.css" />
         </environment>
         <environment exclude="Development">*@
-    <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     @*asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
         asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />*@
 
@@ -23,8 +23,6 @@
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <hr />
-
         <footer class="text-center">
             <div class="container">
                 <div class="row">
@@ -32,14 +30,13 @@
                     <div class="col-sm-6">Phone: +380662967852</div>
                 </div>
                 <div class="row">
-                    &copy; 2019 - Developed by Yelykov Anatoly</p>
+                    &copy; 2019 - Developed by Yelykov Anatoly
                 </div>
                 <div class="row">
                     <a href="#">Back to top</a>
                 </div>
             </div>
-</footer>
-
+        </footer>
     </div>
 
     <environment include="Development">
