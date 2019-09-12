@@ -1,0 +1,130 @@
+﻿@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    input[type=checkbox] 
+    {
+        font-size: 20px;
+        border-color: firebrick;
+        background-color: firebrick;
+    }
+
+    input[type=checkbox]:hover {
+        cursor: pointer;
+    }
+
+
+
+</style>
+
+<h2>Edit Person</h2>
+<hr />
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <label class="field-name">Id</label>
+            <input data-bind="value: id" type="text" readonly name="id" />
+        </div>
+
+        <div class="col-md-6">
+            <label for="resource-type" class="field-name">Resource type</label>
+            <input data-bind="value: resourceType" id="resource-type" type="text" readonly>
+        </div>
+
+        <div class="col-md-6">
+            <label for="is-active" class="field-name">Active</label>
+            <input type="checkbox" id="is-active" class="checkbox" 
+                data-bind="attr:{'checked':(isActive == 'false') ? 'checked' : false}"/>
+        </div>
+
+        <div class="col-md-6">
+            <label class="field-name">Gender</label>
+            <select id="gender" data-bind="selectedOptions: gender">
+                <option value="none" disabled>Select a Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+                <option value="Unknown">Unknown</option>
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label for="birthdate" class="field-name">Birthdate</label>
+            <input data-bind="value: birthDate" id="birthdate" type="text"> @*type="date"*@
+        </div>
+
+        <!-- ko if: name -->
+        <div class="col-md-6">
+            <label class="field-name">Name</label>
+
+        </div>
+        <!-- /ko -->
+        <!-- ko if: address -->
+        <div class="col-md-6">
+            <label class="field-name">Address</label>
+
+        </div>
+        <!-- /ko -->
+        <!-- ko if: telecom -->
+        <div class="col-md-6">
+            <label class="field-name">Telecom</label>
+
+
+
+        </div>
+        <!-- /ko -->
+        <!-- ko if: link -->
+        <div class="col-md-6">
+            <label class="field-name">Link</label>
+            @*readonly*@
+
+
+        </div>
+        <!-- /ko -->
+    </div>
+</div>
+
+<div>
+    <button class="btn btn-primary">Save</button>
+    @Html.ActionLink("Back to List", "Index", "Person", null, new { @class = "btn btn-info" })
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        const siteUrl = "https://hapi.fhir.org/baseR4/Person";
+        var self = this;
+
+        var personId = "@ViewBag.Id";
+
+        if (personId == "create") {
+            console.log("create");
+        }
+        else {
+
+            $.ajax({
+                url: siteUrl + `/${personId}`,
+                type: 'GET',
+                //contentType: "application/json",
+                success: function (data) {
+                    alert("data");
+                    console.log(data);
+                    self = data;
+                    ko.applyBindings(self);
+                        //ko.observableArray();
+                },
+                error: function (data) {
+                    alert("error");
+                    console.log(data);
+                }
+            })
+        }
+
+        $(() => {
+             //$('#is-active').prop("indeterminate", true);
+
+         });
+    </script>
+}
+
