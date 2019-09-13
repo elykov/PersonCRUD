@@ -55,6 +55,33 @@
         padding-left: 5%;
         padding-right: 5%;
     }
+
+    .pers-row {
+        display: flex;
+        align-items: center;
+    }
+
+    .card-box {
+        display: inline-block;
+        vertical-align: middle;
+        float: none; /* работает, но получается максимум 2 карточки в строке */
+        align-self: center !important;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    @@media (min-width: 768px) {
+        .col-sm-6 {
+            width: 49%;
+        }
+    }
+
+    @@media (min-width: 1200px) {
+        .col-lg-4 {
+            width: 33%;
+        }
+    }
+
 </style>
 
 <div class="text-center">
@@ -74,7 +101,7 @@
 
     <div id="all-persons" style="display: none;" data-bind="visible: persons().length != 0">
         <div class="row" data-bind="foreach: persons">
-            <div class="col-sm-6 col-lg-4" data-bind="attr: { id: resource.id }">
+            <div class="col-xs-12 col-sm-6 col-lg-4 card-box" data-bind="attr: { id: resource.id }">
                 <div class="card text-center">
                     <table class="table table-bordered table-hover text-center">
                         <tbody>
