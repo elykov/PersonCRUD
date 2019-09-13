@@ -1,7 +1,7 @@
 ﻿
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Persons"; 
+    ViewBag.Title = "Persons main page"; 
 }
 
 <style>
@@ -99,7 +99,7 @@
         Также дизайн не из лучших, можно сделать красивее и функциональнее, но идей нет.    
     *@
 
-    <div id="all-persons" style="display: none;" data-bind="visible: persons().length != 0">
+    <div id="all-persons" style="display: none;" data-bind="visible: persons">
         <div class="row" data-bind="foreach: persons">
             <div class="col-xs-12 col-sm-6 col-lg-4 card-box" data-bind="attr: { id: resource.id }">
                 <div class="card text-center">

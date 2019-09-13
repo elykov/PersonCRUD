@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Person edit page";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -10,9 +10,13 @@
         background-color: firebrick;
     }
 
-        input[type=checkbox]:hover {
-            cursor: pointer;
-        }
+    select, input[type=text] {
+        color: #111;
+    }
+
+    input[type=checkbox]:hover {
+        cursor: pointer;
+    }
 </style>
 
 <div class="text-center">
@@ -31,19 +35,19 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6">
-            <label class="field-name">Id</label>
+            <span class="field-name">Id</span>
             <input data-bind="value: id" type="text" readonly name="id" />
         </div>
 
         <div class="col-md-6">
-            <label for="resource-type" class="field-name">Resource type</label>
+            <span for="resource-type" class="field-name">Resource type</span>
             <input data-bind="value: resourceType" id="resource-type" type="text" readonly>
         </div>
 
-        <div class="col-md-6">
-            <label for="is-active" class="field-name">Active</label>
+        <div class="col-md-6 checkbox-inline">
             <input type="checkbox" id="is-active" class="checkbox"
                    data-bind="attr:{'checked':($data.active == 'false') ? 'checked' : false}" />
+            <label for="is-active" class="field-name">Active</label>
         </div>
 
         <div class="col-md-6">
@@ -58,36 +62,86 @@
         </div>
 
         <div class="col-md-6">
-            <label for="birthdate" class="field-name">Birthdate</label>
+            <span for="birthdate" class="field-name">Birthdate</span>
             <input data-bind="value: $data.birthDate" id="birthdate" type="text"> @*type="date"*@
         </div>
 
         <!-- ko if: $data.name -->
-        <div class="col-md-6">
-            <label class="field-name">Name</label>
+        <div class="col-md-12">
+            <span class="field-name">Names</span>
+            <div class="row table table-bordered" data-bind="foreach: { data: $data.name, as: 'nameType'}">
+                <div class="name-value">
+                    <span class="field-name">Use: </span>
+                    <input type="text" data-bind="value: nameType.use" />
+                </div>
+                <div class="name-value">
+                    <span class="field-name">Family: </span>
+                    <input type="text" data-bind="value: nameType.family" />
+                </div>
 
+                <div class="name-array-value">
+                    <span class="field-name">Given names</span>
+                    <button class="btn btn-primary" data-bind="click: (data) => { addValue($index(), 'given'); }">Add given name</button>
+
+                    @* Данные привязываются только в одну сторону *@
+
+                    <!-- ko foreach: $data.given -->
+                    <!-- /ko -->
+                    @**@
+                    <div id="given-names" style="display: none;" data-bind="foreach: { data: nameType.given, as: 'giv' }, visible: nameType.given">
+                        <div>
+                            <input type="text" data-bind="value: giv" />
+                            <button class="btn btn-danger btn-sm">X</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="name-array-value">
+                    <span class="field-name">Prefixes</span>
+                    <button class="btn btn-primary" data-bind="click: () => { addValue($index(), 'prefix'); }">Add prefix name</button>
+
+                    @* Данные привязываются только в одну сторону *@
+                    <div id="prefixes" style="display: none;"
+                         data-bind="foreach: {data: $data.prefix, as: 'pref'}, visible: $data.prefix">
+                        <div>
+                            <input type="text" data-bind="value: pref" />
+                            <button class="btn btn-danger btn-sm">X</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="name-array-value">
+                    <span class="field-name">Suffixes</span>
+                    <button class="btn btn-primary" data-bind="click: () => { addValue($index(), 'suffix'); }">Add suffix name</button>
+
+                    @* Данные привязываются только в одну сторону *@
+                    <div id="suffixes" style="display: none;"
+                         data-bind="foreach: {data: $data.suffix, as: 'suff'}, visible: $data.suffix">
+                        <div>
+                            <input type="text" data-bind="value: suff" />
+                            <button class="btn btn-danger btn-sm">X</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- /ko -->
         <!-- ko if: $data.address -->
-        <div class="col-md-6">
-            <label class="field-name">Address</label>
-
+        <div class="col-md-12">
+            <span class="field-name">Address</span>
+            
         </div>
         <!-- /ko -->
         <!-- ko if: $data.telecom -->
-        <div class="col-md-6">
-            <label class="field-name">Telecom</label>
+        <div class="col-md-12">
+            <span class="field-name">Telecom</span>
 
 
 
         </div>
         <!-- /ko -->
         <!-- ko if: $data.link -->
-        <div class="col-md-6">
-            <label class="field-name">Link</label>
+        <div class="col-md-12">
+            <span class="field-name">Link</span>
             @*readonly*@
-
-
         </div>
         <!-- /ko -->
     </div>
@@ -104,37 +158,87 @@
         // POST - INSERT(ID?)
 
         const siteUrl = "https://hapi.fhir.org/baseR4/Person";
-        var self = this;
+            var self = this;
 
-        var personId = "@ViewBag.Id";
+            function addValue(index, val) {
+                console.log(val);
+                console.log(index);
 
-        if (personId == "create") {
-            console.log("create");
-        }
-        else {
-
-            $.ajax({
-                url: siteUrl + `/${personId}`,
-                type: 'GET',
-                //contentType: "application/json",
-                success: function (data) {
-                    //alert("data");
-                    console.log(data);
-                    self = data;
-                    ko.applyBindings(self);
-                        //ko.observableArray();
-                },
-                error: function (data) {
-                    alert("Error while data reading.");
-                    console.log(data);
+                switch (val) {
+                    case 'suffix': {
+                        if (!self.name[index].suffix)
+                            self.name[index].suffix = [];
+                        self.name[index].suffix.push("");
+                        break;
+                    }
+                    case 'prefix': {
+                        if (!self.name[index].prefix)
+                            self.name[index].prefix = [];
+                        self.name[index].prefix.push("");
+                        break;
+                    }
+                    case 'given': {
+                        if (!self.name[index].given)
+                            self.name[index].given = [];
+                        self.name[index].given.push("");
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
                 }
-            })
-        }
+            }
 
-        $(() => {
-             //$('#is-active').prop("indeterminate", true);
+            var personId = "@ViewBag.Id";
 
-         });
+            if (personId == "create") {
+                console.log("create");
+            }
+            else {
+
+                $.ajax({
+                    url: siteUrl + `/${personId}`,
+                    type: 'GET',
+                    //contentType: "application/json",
+                    success: function (data) {
+                        //alert("data");
+                        console.log(data);
+                        self = data;
+                        if (!data.name) {
+                            data.name = [];
+                        }
+
+                        for (var ar of self.name) {
+                            if (!ar.prefix)
+                                ar.prefix = ko.observableArray([]);
+                            else 
+                                ar.prefix = ko.observableArray(ar.prefix);
+
+                            if (!ar.suffix)
+                                ar.suffix = ko.observableArray([]);
+                            else
+                                ar.suffix = ko.observableArray(ar.suffix);
+
+                            if (!ar.given)
+                                ar.given = ko.observableArray([]);
+                            else
+                                ar.given = ko.observableArray(ar.given);
+                            //ko.applyBindings(ar);
+                        }
+
+                        ko.applyBindings(self);
+                    },
+                    error: function (data) {
+                        alert("Error while data reading.");
+                        console.log(data);
+                    }
+                })
+            }
+
+        //$(() => {
+        //     //$('#is-active').prop("indeterminate", true);
+            
+        //});
     </script>
 }
 
